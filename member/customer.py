@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
-from db import cnxn
+from db_pyodbc import cnxn
 
-class ProductAPI(Resource):
-    LIST_URL = '/product/<date>'
+class CustomerAPI(Resource):
+    LIST_URL = '/customer/<date>'
 
     def get(self, date):
         return date
