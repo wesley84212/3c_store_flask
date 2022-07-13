@@ -5,7 +5,9 @@ class RestockAPI(Resource):
     LIST_URL = '/restock/<date>'
 
     def get(self, date):
-        
+        parser = reqparse.RequestParser()
+        cursor = cnxn.cursor()
+        sql = ""
         return date
     
     def post(self):
