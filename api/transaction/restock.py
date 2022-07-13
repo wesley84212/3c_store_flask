@@ -5,6 +5,7 @@ class RestockAPI(Resource):
     LIST_URL = '/restock/<date>'
 
     def get(self, date):
+        
         return date
     
     def post(self):
