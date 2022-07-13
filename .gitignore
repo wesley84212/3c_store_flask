@@ -1,0 +1,10 @@
+# ide
+.vscode/
+
+
+# pipenv
+Pipfile
+Pipfile.lock
+
+# python
+**/__pycache__
