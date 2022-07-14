@@ -4,8 +4,8 @@ CREATE TABLE category(
     category_id int primary key,  #分類id auto_increment
     category_code char(2) ,  #分類縮寫 不可重複 SP=手機 AC=配件 NB=筆電 產生規則:取縮寫(手動)
     category_name nvarchar(100), #分類名稱   手機,配件,筆電
-    category_level char(128), #級別
-    parent_id char(128) #父類id
+    category_level int(1), #級別
+    parent_id int(128) #父類id
     
 )
 
@@ -13,12 +13,12 @@ CREATE TABLE category(
 CREATE TABLE product (
     product_id char(8) primary key,  #商品id 格式:SP000001 產生規則:category_code+該類自動增長 
     product_name nvarchar(100), #商品名稱  SAMSUNG Galaxy Note 20
-    product_model nvarchar(12),
+    product_model nvarchar(30),
     brand_id char(5),  #品牌id FK
     -- thumbnail varchar(100), #縮圖(路徑)
     -- carousel varchar(100),  #輪播圖(路徑)
-    category_id char(2),  #分類id(第二層分類)
-    supplier_id char(5),  #廠商id Example:XX公司
+    category_id int,  #分類id(第二層分類)
+    supplier_id int,  #廠商id Example:XX公司
     create_time datetime ,
     details nvarchar(500) #詳細介紹
 );
@@ -27,7 +27,7 @@ CREATE TABLE product (
 CREATE TABLE brand (
     brand_id char(5) primary key ,  #品牌id 格式:B0001 產生規則:B+資料庫自動增長
     brand_code char(2), #品牌縮寫 不可重複 example:SAMSUNG=SS,APPLE=AP,XIAOMI=XM
-    brand_name nvarchar(100), #品牌名稱 Example:SAMSUNG,APPLE,XIAOMI
+    brand_name nvarchar(64), #品牌名稱 Example:SAMSUNG,APPLE,XIAOMI
 );
 
 /*庫存基本檔*/
@@ -71,7 +71,7 @@ CREATE TABLE customer (
 
 /*廠商基本檔*/
 CREATE TABLE supplier(
-    supplier_id char(5) primary key ,  #廠商id example:S0001  產生規則:S+資料庫自動增長
+    supplier_id int primary key ,  #廠商id example:S0001  產生規則:S+資料庫自動增長
     supplier_name nvarchar(40), #廠商名稱
     contact_num varchar(10),
     create_time datetime, #創建時間
