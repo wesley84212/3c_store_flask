@@ -7,6 +7,6 @@ sku_api = Blueprint('sku', __name__)
 api = Api(sku_api)
 
 api.add_resource(
-    SKUAPI,
-    SKUAPI.LIST_URL
+    SkuAPI,
+    SkuAPI.LIST_URL
 )
