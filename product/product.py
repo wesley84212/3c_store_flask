@@ -17,8 +17,9 @@ class ProductAPI(Resource):
             'Products': [record.to_json() for record in products]
         } 
         for record in products :
+            print(type(record.product_name))
             print(record.product_name)
-        
+
         # cursor = cnxn.cursor()
         # sql = '''SELECT `trans_record`.`trans_id`,
         #             `trans_record`.`employee_id`,

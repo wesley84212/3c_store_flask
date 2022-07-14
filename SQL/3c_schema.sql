@@ -4,9 +4,9 @@ CREATE TABLE category(
     category_id int primary key,  #分類id auto_increment
     category_code char(2) ,  #分類縮寫 不可重複 SP=手機 AC=配件 NB=筆電 產生規則:取縮寫(手動)
     category_name nvarchar(100), #分類名稱   手機,配件,筆電
-    category_level int(1), #級別
-    parent_id int(128) #父類id
-    
+    category_level int, #級別
+    parent_id int #父類id
+       
 )
 
 /*商品基本檔*/

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from db import db
 
 
@@ -25,16 +24,16 @@ from db import db
 
 class Product(db.Model):
     __tablename__ = 'product'
-    __table_args__ = {'mysql_charset': 'utf8mb4'}
+    # __table_args__ = {'mysql_charset': 'utf8mb4_unicode_ci'}
 
     product_id = db.Column(db.String(8), primary_key=True)
-    product_name = db.Column(db.String(100,'utf8mb4'), nullable=True)
+    product_name = db.Column(db.Unicode(100), nullable=True)
     product_model = db.Column(db.String(30), nullable=True)
     brand_id = db.Column(db.String(5), nullable=True)
     category_id = db.Column(db.Integer, nullable=True)
     supplier_id = db.Column(db.Integer, nullable=True)
     create_time = db.Column(db.DateTime(), nullable=True)
-    # details = db.Column(db.Unicode(500), nullable=True)
+    details = db.Column(db.String(500), nullable=True)
     
     def to_json(self):
         json = {
@@ -45,7 +44,7 @@ class Product(db.Model):
             'category_id': self.category_id,
             'supplier_id': self.supplier_id,
             'create_time': self.create_time.strftime("%m/%d/%Y, %H:%M:%S"),
-            # 'details': self.details
+            'details': self.details
         }
         return json
 
