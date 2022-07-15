@@ -11,6 +11,19 @@ class Transaction(db.Model):
     trans_date = db.Column(db.DateTime(), nullable=False)
     total_price = db.Column(db.Integer, nullable=False)
 
+    @classmethod 
+    def create(trans_id, employee_id, customer_id, trans_date, total_price):
+        transaction = Transaction()
+        transaction.trans_id = trans_id
+        transaction.employee_id = employee_id
+        transaction.customer_id = customer_id
+        transaction.trans_date = trans_date
+        transaction.total_price = total_price
+        return transaction
+
+
+
+
     def to_json(self):
         json = {
             'trans_id': self.trans_id,

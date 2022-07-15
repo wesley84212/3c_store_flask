@@ -14,6 +14,7 @@ api.add_resource(
 
 api.add_resource(
     TransactionAPI,
-    TransactionAPI.LIST_URL
+    TransactionAPI.LIST_URL,
+    TransactionAPI.CREATE_URL
 )
 
