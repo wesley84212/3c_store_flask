@@ -7,50 +7,83 @@ from db import db
 from .models import Product
 
 class ProductAPI(Resource):
-    LIST_URL = '/product/<date>'
+    LIST_URL= '/product/<brand_id>'
+    parser = reqparse.RequestParser()
+    parser.add_argument('product_name', required=True, help='Product Name is required',location=['form'])
+    parser.add_argument('product_model', required=True, help='Product Model is required',location=['form'])
+    
+    def get(self, brand_id):
 
-    def get(self, date):
-        parser = reqparse.RequestParser()
+        products = Product.query.filter_by(brand_id=brand_id).order_by(Product.product_id.desc()).all()
+        json = {
+            'Products': [record.to_json() for record in products]
+        } 
+        # query = Product.query.filter_by(brand_id='B0002').order_by(Product.product_id.desc()).all()
+        # for record in query :
+        #     print(record.product_id,record.product_name)
+        return json
 
-        # transaction = Transaction.session.query().filter().all()
+    def post(self):
+         # 新增資料
+        try:
+            arg =self.parser.parse_args()
+            Product()
+            product_add = Product('SP000011',f'{arg["product_name"]}',f'{arg["product_model"]}','B0002',1,4,'2022/01/01 20:37:21','蘋果14')
+            db.session.add(product_add)
+            db.session.commit()
+            return {'message':f'insert {product_add}success'},200
+        except Exception as e:
+            print (e)
+            return {"error message":f'{e}'}
+
+    def put(self,date):
+        # Update data
+        product = Product.query.filter_by(product_name='iPhone 14').first()
+        product.product_name = 'iPhone 14 Pro'
+        db.session.commit()
+        return 
+
+    def delete(self,date):
+        # 刪除資料
+        query = Product.query.filter_by(product_name='iPhone 14').first()
+        db.session.delete(query)
+        db.session.commit()
+        return 
+
+
+class get_Products(Resource):
+    CREATE_URL='/products/'
+    parser = reqparse.RequestParser()
+    parser.add_argument('product_name', required=True, help='Product Name is required',location=['form'])
+    parser.add_argument('product_model', required=True, help='Product Model is required',location=['form'])
+    
+    def get(self):
+
         products = db.session.query(Product).all()
         json = {
             'Products': [record.to_json() for record in products]
         } 
-        # for record in products :
-        #     print(type(record.product_name))
-        #     print(record.product_name)
         query = Product.query.filter_by(brand_id='B0002').order_by(Product.product_id.desc()).all()
         for record in query :
             print(record.product_id,record.product_name)
-        # cursor = cnxn.cursor()
-        # sql = '''SELECT `trans_record`.`trans_id`,
-        #             `trans_record`.`employee_id`,
-        #             `trans_record`.`customer_id`,
-        #             DATE_FORMAT(`trans_record`.`trans_date`, '%Y-%m-%d'),
-        #             `trans_record`.`total_price`
-        #         FROM `pos`.`trans_record`;'''
-
-        # # print(sql)
-        # cursor.execute(sql)
-        # data = cursor.fetchall()
-        # res = [list(row) for row in data]       
-        # # print(res)
         return json
 
-    def post(self,date):
+    def post(self):
          # 新增資料
-        product_add = Product('SP000009','iPhone 14','A2633','B0002',1,4,'2022/01/01 20:37:21','蘋果14')
-        db.session.add(product_add)
-        db.session.commit()
-        return {'message':f'insert {product_add}success'},200
+        try:
+            arg =self.parser.parse_args()
+            product_add = Product('SP000011',f'{arg["product_name"]}',f'{arg["product_model"]}','B0002',1,4,'2022/01/01 20:37:21','蘋果14')
+            db.session.add(product_add)
+            db.session.commit()
+            return {'message':f'insert {product_add}success'},200
+        except Exception as e:
+            print (e)
+            return {"error message":f'{e}'}
 
-    def put(self):
-        # Updata data
-        query = Product.query.filter_by(product_name='iPhone 14').first()
-
-        # 將 price 修改成 10 塊
-        query.name = 10
+    def put(self,date):
+        # Update data
+        product = Product.query.filter_by(product_name='iPhone 14').first()
+        product.product_name = 'iPhone 14 Pro'
         db.session.commit()
         return 
 
