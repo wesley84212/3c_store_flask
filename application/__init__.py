@@ -2,7 +2,7 @@ from flask import Flask
 
 from product import *
 from sku import *
-from transaction import *
+from application.controllers import *
 from member import *
 
 #建立Flask APP
