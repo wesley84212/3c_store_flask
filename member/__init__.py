@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from .customer import *
+from ..application.controllers.member import *
 
 customer_api = Blueprint('customer', __name__)
 api = Api(customer_api)
