@@ -9,7 +9,6 @@ flask-restful = "*"
 pyodbc = "*"
 flask-sqlalchemy = "*"
 mysqlclient = "*"
-
 [dev-packages]
 
 [requires]
