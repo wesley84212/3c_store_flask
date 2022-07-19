@@ -13,31 +13,31 @@ transaction_api = Api(transaction_bp)
 member_api = Api(member_bp)
 
 transaction_api.add_resource(
-    RestockAPI,
-    RestockAPI.LIST_URL,
-    RestockAPI.CREATE_URL
+    RestockCTRL,
+    RestockCTRL.LIST_URL,
+    RestockCTRL.CREATE_URL
 )
 transaction_api.add_resource(
-    RestockDataAPI,
-    RestockDataAPI.LIST_URL,
-    RestockDataAPI.CREATE_URL
+    RestockDataCTRL,
+    RestockDataCTRL.LIST_URL,
+    RestockDataCTRL.CREATE_URL
 )
 transaction_api.add_resource(
-    TransactionAPI,
-    TransactionAPI.LIST_URL,
-    TransactionAPI.CREATE_URL
+    TransactionCTRL,
+    TransactionCTRL.LIST_URL,
+    TransactionCTRL.CREATE_URL
 )
 
 
 member_api.add_resource(
-    CustomerAPI,
-    CustomerAPI.LIST_URL,
-    CustomerAPI.CREATE_URL
+    CustomerCTRL,
+    CustomerCTRL.LIST_URL,
+    CustomerCTRL.CREATE_URL
 )
 member_api.add_resource(
-    EmployeeAPI,
-    EmployeeAPI.LIST_URL,
-    EmployeeAPI.CREATE_URL
+    EmployeeCTRL,
+    EmployeeCTRL.LIST_URL,
+    EmployeeCTRL.CREATE_URL
 )
 
 

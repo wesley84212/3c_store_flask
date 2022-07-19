@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from db_pyodbc import cnxn
 
-class CustomerAPI(Resource):
+class CustomerCTRL(Resource):
     LIST_URL = '/customer/<date>'
     CREATE_URL = '/customer'
 
@@ -18,7 +18,7 @@ class CustomerAPI(Resource):
         return 
 
 
-class EmployeeAPI(Resource):
+class EmployeeCTRL(Resource):
     LIST_URL = '/employee/<date>'
     CREATE_URL = '/employee'
 
