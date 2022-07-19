@@ -84,7 +84,18 @@ class RestockDataCTRL(Resource):
     CREATE_URL = '/restock_data'
 
     def get(self, supplier_id):
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        sku = db.session.query(
+                                Sku.sku_id,
+                                Product.product_name,
+                                Sku.sku_code,
+                                Sku.cost
+                            ).join(
+                                Product,
+                                Sku.product_id == Product.product_id,
+                                isouter = True
+                            ).filter(
+                                Product.supplier_id == supplier_id
+                            ).all()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         json = {
             'data': [{   
                         'product_id': record[0],
