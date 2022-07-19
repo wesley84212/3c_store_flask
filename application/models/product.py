@@ -1,26 +1,5 @@
 from db import db
-
-
-# class Category(db.Model):
-#     __tablename__ = 'category'
-#     __table_args__ = {'mysql_charset': 'utf8mb4'}
-
-#     category_id = db.Column(db.Integer, primary_key=True)
-#     category_code = db.Column(db.String(2), nullable=False)
-#     category_name = db.Column(db.String(100), nullable=False)
-#     category_level = db.Column(db.Integer, nullable=False)
-#     parent_id = db.Column(db.Integer, nullable=False)
-
-#     def to_json(self):
-#         json = {
-#             'category_id': self.category_id,
-#             'category_code': self.category_code,
-#             'category_name': self.category_name,
-#             'category_level': self.category_level,
-#             'parent_id': self.parent_id
-#         }
-#         return json
-
+from sqlalchemy import select
 
 class Product(db.Model):
     __tablename__ = 'product'
@@ -58,23 +37,3 @@ class Product(db.Model):
             'details': self.details
         }
         return json
-
-
-class Brand(db.Model):
-    __tablename__ = 'brand'
-    __table_args__ = {'mysql_charset': 'utf8mb4'}
-
-    brand_id = db.Column(db.String(5),primary_key=True)
-    brand_code = db.Column(db.String(2), nullable=True)
-    brand_name = db.Column(db.String(64), nullable=True)
-
-    db_brand_product = db.relationship("Product", backref="brand")
-
-    def to_json(self):
-        json = {
-            'brand_id': self.brand_id,
-            'brand_code': self.brand_code,
-            'brand_name': self.brand_name,
-        }
-        return json
-
