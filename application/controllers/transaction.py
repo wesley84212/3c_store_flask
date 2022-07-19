@@ -1,13 +1,17 @@
 from datetime import datetime
 from urllib import response
 from flask_restful import Resource, reqparse
+from application.models.member import Customer, Employee, Supplier
+from application.models.transaction import Transaction, ReStock, ReStockDetail
+from application.models.sku import Sku
+from application.models.product import Product
+
 from db import db
 # from db_pyodbc import cnxn
-from ..models.transaction import Transaction, ReStock, ReStockDetail
 import uuid
 # import json 
 
-class TransactionAPI(Resource):
+class TransactionCTRL(Resource):
     LIST_URL = '/transaction/<trans_id>'
     CREATE_URL = '/transaction'
 
@@ -24,7 +28,8 @@ class TransactionAPI(Resource):
             return {'message':'查無此交易紀錄'}
 
         transaction_json = {
-            'transaction': [record.to_json() for record in transaction]
+            'data': [record.to_json() for record in transaction],
+            'title': 'transaction'
         } 
         return transaction_json
     
@@ -74,7 +79,36 @@ class TransactionAPI(Resource):
         db.session.commit()
         return 
 
-class RestockAPI(Resource):
+class RestockDataCTRL(Resource):
+    LIST_URL = '/restock_data/<supplier_id>'
+    CREATE_URL = '/restock_data'
+
+    def get(self, supplier_id):
+        sku = db.session.query(
+                                Sku.sku_id,
+                                Product.product_name,
+                                Sku.sku_code,
+                                Sku.cost
+                            ).join(
+                                Product,
+                                Sku.product_id == Product.product_id,
+                                isouter = True
+                            ).filter(
+                                Product.supplier_id == supplier_id
+                            ).all()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        json = {
+            'data': [{   
+                        'product_id': record[0],
+                        'sku_id': record[1],
+                        'product_name': record[2],
+                        'sku_code': record[3],
+                        'cost': record[4]
+                    } for record in sku],
+            'title': 'sku_restock'
+        } 
+        return  json
+
+class RestockCTRL(Resource):
     LIST_URL = '/restock/<restock_id>'
     CREATE_URL = '/restock'
 
@@ -83,33 +117,76 @@ class RestockAPI(Resource):
         parser.add_argument('employee_id', type=str, required=True, location=['form'])
         parser.add_argument('customer_id', type=str, required=True, location=['form'])
         
-        restock = db.session.query(ReStock).filter(
-            ReStock.restock_id == (restock_id if(restock_id!='all') else ReStock.restock_id)
-        ).all()
+        restock = db.session.query(
+                                ReStock, 
+                                Employee.employee_name,
+                                Supplier.supplier_name
+                            ).join(
+                                Employee, 
+                                ReStock.employee_id == Employee.employee_id, 
+                                isouter = True
+                            ).join(
+                                Supplier,
+                                ReStock.supplier_id == Supplier.supplier_id, 
+                                isouter = True
+                            ).filter(
+                                ReStock.restock_id == (restock_id if(restock_id!='all') else ReStock.restock_id)
+                            ).all()
 
+        print(restock)
         if not restock:
             return {'message':'查無此交易紀錄'}
 
         restock_json = {
-            'restock': [record.to_json() for record in restock]
+            'data': [{
+                            'restock_id': record[0].restock_id,
+                            'employee_id': record[0].employee_id,
+                            'employee_name': record[1],
+                            'supplier_id': record[0].supplier_id,
+                            'supplier_name': record[2],
+                            'restock_date': record[0].restock_date.strftime("%m/%d/%Y, %H:%M:%S"),
+                            'total_price': record[0].total_price
+                        } for record in restock],
+            'title': 'restock'
         } 
         return restock_json
+        return 200
     
     def post(self):
         parser = reqparse.RequestParser()
+        # trans_record Tb
         parser.add_argument('employee_id', type=str, required=True, location=['form'])
         parser.add_argument('supplier_id', type=str, required=True, location=['form'])
-        parser.add_argument('restock_date', type=str, required=True, location=['form'])
+        # parser.add_argument('restock_date', type=str, required=True, location=['form'])
+
+        # trans_detail Tb
+        parser.add_argument('sku_id[]', type=str, required=True, location=['form'], action='append')
+        parser.add_argument('sale_price[]', type=int, required=True, location=['form'], action='append')
+        parser.add_argument('quantity[]', type=int, required=True, location=['form'], action='append')
+        parser.add_argument('memo[]', type=str, required=False, location=['form'], action='append')
+        
         req_data = parser.parse_args()
-        print(type(req_data['restock_date']))
         restock = ReStock.create(
             restock_id = str(uuid.uuid4()),
             employee_id = req_data['employee_id'],
             supplier_id = req_data['supplier_id'],
-            restock_date = req_data['restock_date'],
+            restock_date = datetime.now(),
             total_price = 200000
         )
         db.session.add(restock)
+
+        for i in range(0, len(req_data['sku_id[]'])):
+            reStockDetail = ReStockDetail.create(
+                restock_id = restock.restock_id,
+                sku_id = req_data['sku_id[]'][i],
+                serial_id = 1,
+                sale_price = req_data['sale_price[]'][i],
+                quantity = req_data['quantity[]'][i],
+                memo = req_data['memo[]'][i]
+            )          
+            print(reStockDetail.to_json())
+            db.session.add(reStockDetail)
+
         db.session.commit()
         return {'restock_id': restock.restock_id},
 

@@ -91,7 +91,7 @@ class ReStockDetail(db.Model):
             'sku_id': self.sku_id,
             'serial_id': self.serial_id,
             'sale_price': self.sale_price,
-            'quantity': self.quantity,
+            'quantity': self.sale_quantity,
             'memo': self.memo
         }
         return json
